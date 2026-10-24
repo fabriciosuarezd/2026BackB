@@ -66,14 +66,23 @@ const login = asyncHandler(async(req, res) => {
             email:user.email,
             token: generarToken(user.id)
         })
+    } else {
+        res.status(401)
+        throw new Error("Credenciales incorrectas")
     }
 
 
 })
 
 const data = asyncHandler(async(req, res) => {
-    
+    res.status(200).json(req.user)
 })
+
+const generarToken = (id_usuario) => {
+    return jwt.sign({id_usuario}, process.env.JWT_SECRET, {
+        expiresIn: '30d'
+    })
+}
 
 module.exports = {
     login, register, data
